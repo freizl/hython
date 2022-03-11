@@ -30,6 +30,7 @@ import qualified Hython.ExceptionHandling as ExceptionHandling
 import Hython.Ref
 import Hython.Types
 import qualified Hython.Statement as Statement
+import Control.Monad.Trans.Except (throwE)
 
 newtype Interpreter a = Interpreter { unwrap :: ExceptT String (ContT (Either String ()) (StateT InterpreterState IO)) a }
                             deriving (Functor, Applicative, Monad, MonadIO, MonadCont, MonadError String)
@@ -43,6 +44,9 @@ data InterpreterState = InterpreterState
     }
 
 type Continuation = Object -> Interpreter ()
+
+instance MonadFail Interpreter where
+  fail = Interpreter . throwE
 
 instance Environment.MonadEnv Object Interpreter where
     getEnv      = Interpreter $ gets stateEnv
