@@ -8,3 +8,7 @@ dist
 happy.log
 /hython
 __pycache__
+
+.DS_Store
+dist-newstyle
+stack.yaml.lock
